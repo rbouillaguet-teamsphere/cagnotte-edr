@@ -7,16 +7,12 @@ if (!admin.apps.length) {
   try {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
     
-    // Debug: Check the private key format
-    console.log("Private key first 50 chars:", serviceAccount.private_key.substring(0, 50));
-    console.log("Contains \\n:", serviceAccount.private_key.includes('\\n'));
-    console.log("Contains actual newline:", serviceAccount.private_key.includes('\n'));
-    
-    // Fix the private key if needed
-    if (serviceAccount.private_key.includes('\\n')) {
-      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
-      console.log("Fixed private key newlines");
-    }
+    // Debug: Check the complete private key
+    console.log("Private key length:", serviceAccount.private_key.length);
+    console.log("Private key starts with:", serviceAccount.private_key.substring(0, 100));
+    console.log("Private key ends with:", serviceAccount.private_key.substring(serviceAccount.private_key.length - 100));
+    console.log("Has BEGIN:", serviceAccount.private_key.includes('-----BEGIN PRIVATE KEY-----'));
+    console.log("Has END:", serviceAccount.private_key.includes('-----END PRIVATE KEY-----'));
     
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
