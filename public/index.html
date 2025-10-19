@@ -201,7 +201,7 @@
     // ==============================
     const DONATION_CONFIG = {
       goal: 8000,                             // 🎯 Objectif en €
-      initialRaised: 2760,                     // Montant déjà collecté (mettre 0 si vous commencez)
+      initialRaised: 0,                     // Montant déjà collecté (mettre 0 si vous commencez)
       currency: 'EUR',
       paymentUrl: 'https://buy.stripe.com/test_28E28s1xp5Ty47OcSz2wU00', // ⚠️ Remplacer par votre Stripe Payment Link (format https://buy.stripe.com/...) ou HelloAsso
       donors: [                                // Derniers dons (facultatif)
@@ -309,24 +309,30 @@
     renderProgress();
     renderDonors();
     updateQR();
+
+    // ==============================
+//  Chargement du total dynamique
+// ==============================
+async function updateTotalFromServer() {
+  try {
+    const res = await fetch('/api/getTotal');
+    const data = await res.json();
+
+    if (data.total !== undefined) {
+      DONATION_CONFIG.initialRaised = data.total;
+      renderProgress(); // met à jour la barre et le montant
+    }
+  } catch (err) {
+    console.error('Erreur lors de la récupération du total:', err);
+  }
+}
+
+// Met à jour au chargement
+updateTotalFromServer();
+
+// Et rafraîchit toutes les 15 secondes
+setInterval(updateTotalFromServer, 15000);
+
   </script>
-
-  <!--
-  ============================================
-  🛠️ GUIDE RAPIDE D’INTÉGRATION (FR)
-  ============================================
-  1) Créez un compte Stripe (ou connectez votre compte existant).
-  2) Créez un Payment Link (Montant libre recommandé):
-     Stripe Dashboard > Payments > Payment Links > New > Product "Don EDR" > activez montant libre.
-  3) Copiez l’URL (ex: https://buy.stripe.com/...) et remplacez DONATION_CONFIG.paymentUrl.
-  4) Ajustez l’objectif (goal) et le montant initial (initialRaised) si nécessaire.
-  5) Hébergez la page (Netlify, Vercel, Firebase Hosting, OVH…). C’est un fichier HTML unique.
-
-  ✅ Option HelloAsso sans frais : créez une collecte, récupérez l’URL publique ou le code d’embed, et remplacez paymentUrl.
-
-  💡 Suivi automatique du total (optionnel, nécessite un backend):
-     - Créez un webhook Stripe (event: checkout.session.completed / payment_intent.succeeded)
-     - Incrémentez un total (Firestore / Supabase / JSON hébergé) et remplacez initialRaised par une requête fetch sur ce total au chargement.
-  -->
 </body>
 </html>
