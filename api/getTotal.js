@@ -2,8 +2,11 @@ import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 if (!getApps().length) {
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+
   initializeApp({
-    credential: cert(JSON.parse(process.env.FIREBASE_ADMIN_KEY))
+    credential: cert(serviceAccount),
   });
 }
 
