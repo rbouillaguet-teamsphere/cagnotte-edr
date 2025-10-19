@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cagnotte – École de Rugby ROC Giffois</title>
+  <meta name="description" content="Soutenez l’EDR du ROC Giffois : aidez-nous à financer les déplacements en bus et le voyage de fin d’année." />
+  <meta property="og:title" content="Cagnotte – École de Rugby ROC Giffois" />
+  <meta property="og:description" content="Soutenez l’EDR du ROC Giffois : aidez-nous à financer les déplacements en bus et le voyage de fin d’année." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/3/3a/Rugby_union_pictogram.svg" />
+  <meta name="theme-color" content="#FFCC00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --roc-yellow:#FFCC00; /* jaune ROC */
+      --roc-black:#111111;  /* noir profond */
+      --bg:#0b0b0b;         /* arrière-plan */
+      --card:#191919;       /* carte */
+      --muted:#9b9b9b;      /* texte secondaire */
+      --success:#2ecc71;    /* vert succès */
+      --danger:#ff5252;     /* alerte */
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:linear-gradient(180deg,#0b0b0b, #121212 35%, #0b0b0b);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+    a{color:var(--roc-yellow);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrapper{max-width:1050px;margin:0 auto;padding:20px}
+    header{display:flex;align-items:center;gap:18px;padding:16px 0}
+    header img.logo{width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(255,204,0,.25))}
+    header .club{display:flex;flex-direction:column}
+    header .club h1{font-size:1.6rem;margin:0;font-weight:800;letter-spacing:.2px}
+    header .club span{font-size:.95rem;color:var(--muted)}
+
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin:10px 0 22px}
+    @media (max-width:880px){.hero{grid-template-columns:1fr}}
+
+    .card{background:var(--card);border:1px solid #2a2a2a;border-radius:18px;padding:18px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+    .card h2{margin:0 0 10px;font-size:1.25rem}
+
+    /* Progress */
+    .progress{background:#0e0e0e;border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;height:18px;position:relative}
+    .progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--roc-yellow),#ffd84d);width:0%;transition:width .8s ease}
+    .progress-labels{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:#ddd;font-weight:600}
+    .progress-labels small{color:var(--muted);font-weight:500}
+
+    .cta{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+    .btn{appearance:none;cursor:pointer;border:none;border-radius:12px;padding:12px 16px;font-weight:700}
+    .btn-primary{background:var(--roc-yellow);color:#111}
+    .btn-primary:hover{filter:brightness(1.05)}
+    .btn-outline{background:transparent;color:#fff;border:1px solid #3a3a3a}
+    .btn-outline:hover{border-color:#595959}
+
+    .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .badge{border:1px solid #2e2e2e;border-radius:999px;padding:6px 10px;font-size:.85rem;color:#ddd}
+
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+    @media (max-width:880px){.cols{grid-template-columns:1fr}}
+
+    .donors{display:grid;gap:10px;max-height:420px;overflow:auto;padding-right:4px}
+    .donor{display:flex;gap:10px;align-items:flex-start;background:#121212;border:1px solid #262626;border-radius:12px;padding:10px}
+    .donor .avatar{width:36px;height:36px;border-radius:50%;background:#222;border:1px solid #333;display:grid;place-items:center;font-weight:800;color:#111;background:var(--roc-yellow)}
+    .donor .meta{display:flex;flex-direction:column}
+    .donor .meta .top{display:flex;gap:8px;align-items:center}
+    .donor .name{font-weight:700}
+    .donor .amount{font-weight:800;color:#fff;background:#1f1f1f;border:1px solid #333;border-radius:8px;padding:2px 8px}
+    .donor .msg{color:#cfcfcf;margin-top:2px}
+
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    @media (max-width:680px){.gallery{grid-template-columns:1fr 1fr}}
+    .gallery img{width:100%;height:140px;object-fit:cover;border-radius:12px;border:1px solid #2a2a2a}
+
+    .faq details{background:#121212;border:1px solid #262626;border-radius:12px;padding:12px}
+    .faq details+details{margin-top:10px}
+    .faq summary{cursor:pointer;font-weight:700}
+
+    footer{margin:32px 0 8px;color:#a5a5a5;font-size:.9rem}
+    .legal{font-size:.85rem;color:#9a9a9a;margin-top:8px}
+    .stripe-logos{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+    .chip{border:1px solid #2a2a2a;border-radius:10px;padding:6px 8px;color:#ddd;font-size:.85rem}
+    .qr{background:#0f0f0f;border:1px dashed #2a2a2a;border-radius:12px;padding:10px;display:grid;place-items:center}
+    .notice{background:#141414;border:1px solid #333;border-left:6px solid var(--roc-yellow);border-radius:12px;padding:12px;color:#eaeaea}
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <!-- Remplace l'URL du logo par celui du club -->
+      <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Rugby_union_pictogram.svg" alt="Logo ROC Giffois"/>
+      <div class="club">
+        <h1>🖤💛 Cagnotte – École de Rugby Giffoise</h1>
+        <span>Objectif : financer <strong>les déplacements en bus</strong> et le <strong>voyage de fin d’année</strong>.</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <article class="card">
+        <h2>Votre soutien fait rouler nos abeilles 🐝</h2>
+        <p style="color:#eaeaea;line-height:1.6">
+          Chaque week-end, nos jeunes jouent partout en Île‑de‑France (et au‑delà !). Vos dons financent directement les <strong>bus pour les plateaux</strong> et le <strong>voyage de fin d’année</strong> qui récompense leur engagement toute la saison. Merci pour votre aide 🙏
+        </p>
+
+        <div class="progress" aria-label="Progression de la cagnotte">
+          <span id="progressBar"></span>
+        </div>
+        <div class="progress-labels">
+          <div>
+            <span id="raisedLabel">0 €</span> collectés <small>(<span id="donationsCount">0</span> dons)</small>
+          </div>
+          <div>
+            Objectif : <strong id="goalLabel">—</strong>
+          </div>
+        </div>
+
+        <div class="cta">
+          <!-- ⚠️ Remplacer data-url par votre lien Stripe Payment Link (ou HelloAsso) -->
+          <button id="donateBtn" class="btn btn-primary">🎁 Je participe</button>
+          <button id="shareBtn" class="btn btn-outline">🔗 Partager</button>
+          <a id="qrToggle" class="btn btn-outline" href="#qr" onclick="toggleQR(event)">📱 Afficher le QR Code</a>
+        </div>
+
+        <div class="badges" aria-label="informations sécurité paiement">
+          <span class="badge">Paiement sécurisé</span>
+          <span class="badge">Stripe / CB / Apple Pay</span>
+          <span class="badge">Sans compte requis</span>
+        </div>
+
+        <div id="qr" class="qr" style="display:none; margin-top:14px">
+          <img id="qrImg" alt="QR vers la page de paiement" />
+          <div class="legal" style="text-align:center">Scannez pour ouvrir la page de paiement</div>
+        </div>
+      </article>
+
+      <aside class="card">
+        <h2>Derniers donateurs 💛</h2>
+        <div id="donorsList" class="donors" aria-live="polite"></div>
+        <div class="legal">Envie d’apparaître ici ? Laissez votre prénom lors du paiement.</div>
+      </aside>
+    </section>
+
+    <section class="cols">
+      <article class="card">
+        <h2>À quoi servira votre don ?</h2>
+        <ul style="line-height:1.8;color:#eaeaea">
+          <li>🚌 <strong>Déplacements en bus</strong> pour les plateaux et tournois</li>
+          <li>🏕️ <strong>Voyage de fin d’année</strong> (hébergement, repas, activités)</li>
+          <li>🛡️ <strong>Sécurité & confort</strong> (eau, collations, petits matériels)</li>
+        </ul>
+        <div class="notice" style="margin-top:10px">
+          <strong>Transparence :</strong> le total et l’usage des fonds seront présentés au comité directeur et partagés aux parents en fin de saison.
+        </div>
+        <div class="stripe-logos">
+          <span class="chip">Visa</span>
+          <span class="chip">Mastercard</span>
+          <span class="chip">Apple Pay</span>
+          <span class="chip">Google Pay</span>
+          <span class="chip">Stripe</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>En images 📸</h2>
+        <div class="gallery">
+          <!-- Remplacez par vos photos club -->
+          <img src="https://images.unsplash.com/photo-1537317544053-436a5ee3c1bf?q=80&w=800&auto=format&fit=crop" alt="Match jeunes"/>
+          <img src="https://images.unsplash.com/photo-1502810365585-9c46b84dffde?q=80&w=800&auto=format&fit=crop" alt="Entrainement"/>
+          <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=800&auto=format&fit=crop" alt="Cohésion"/>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:20px">
+      <h2>Questions fréquentes</h2>
+      <div class="faq">
+        <details>
+          <summary>Comment payer en ligne ?</summary>
+          <p>Cliquer sur <strong>“Je participe”</strong> ouvre une page de paiement sécurisée (Stripe). Carte bancaire, Apple/Google Pay acceptés. Aucun compte nécessaire.</p>
+        </details>
+        <details>
+          <summary>Puis-je faire un virement / chèque ?</summary>
+          <p>Oui. Contactez le <em>Trésorier ROC Giffois</em> pour le RIB et la référence à indiquer. Votre don sera ajouté à la cagnotte.</p>
+        </details>
+        <details>
+          <summary>Le don est-il déductible des impôts ?</summary>
+          <p>À ce jour, les dons à l’EDR du ROC Giffois ne donnent <strong>pas</strong> lieu à un reçu fiscal, sauf décision contraire du club (à confirmer en début de saison).</p>
+        </details>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> ROC Giffois – École de Rugby. Tous droits réservés.</div>
+      <div class="legal">Responsable : Équipe EDR ROC Giffois • Contact trésorerie : <a href="mailto:contact@roc-giffois.fr">contact@roc-giffois.fr</a></div>
+    </footer>
+  </div>
+
+  <script>
+    // ==============================
+    //  CONFIG – Personalisez ici
+    // ==============================
+    const DONATION_CONFIG = {
+      goal: 8000,                             // 🎯 Objectif en €
+      initialRaised: 2760,                     // Montant déjà collecté (mettre 0 si vous commencez)
+      currency: 'EUR',
+      paymentUrl: 'https://buy.stripe.com/test_28E28s1xp5Ty47OcSz2wU00', // ⚠️ Remplacer par votre Stripe Payment Link (format https://buy.stripe.com/...) ou HelloAsso
+      donors: [                                // Derniers dons (facultatif)
+        { name: 'Camille', amount: 50, msg: 'Allez les jeunes !', date: '2025-10-10' },
+        { name: 'Nicolas', amount: 100, msg: 'Pour le bus 👍', date: '2025-10-12' },
+        { name: 'Anonyme', amount: 20, msg: '', date: '2025-10-13' },
+        { name: 'Sophie', amount: 75, msg: 'Merci les coachs', date: '2025-10-14' }
+      ]
+    };
+
+    // ==============================
+    //  UI Logic – pas besoin de toucher
+    // ==============================
+    const fmt = new Intl.NumberFormat('fr-FR', { style:'currency', currency: DONATION_CONFIG.currency });
+
+    function renderProgress(){
+      const raised = DONATION_CONFIG.initialRaised;
+      const goal = DONATION_CONFIG.goal;
+      const pct = Math.max(0, Math.min(100, (raised/goal)*100));
+
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('raisedLabel').textContent = fmt.format(raised);
+      document.getElementById('goalLabel').textContent = fmt.format(goal);
+
+      // Count donors (from array)
+      const count = DONATION_CONFIG.donors?.length || 0;
+      document.getElementById('donationsCount').textContent = count;
+    }
+
+    function initials(name){
+      return (name||'A').trim().split(/\s+/).slice(0,2).map(n=>n[0]).join('').toUpperCase();
+    }
+
+    function renderDonors(){
+      const list = document.getElementById('donorsList');
+      list.innerHTML = '';
+
+      const donors = (DONATION_CONFIG.donors||[]).slice(0,30);
+      donors.forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'donor';
+        el.innerHTML = `
+          <div class="avatar" aria-hidden="true">${initials(d.name)}</div>
+          <div class="meta">
+            <div class="top">
+              <span class="name">${d.name || 'Anonyme'}</span>
+              <span class="amount">${fmt.format(d.amount||0)}</span>
+              <small style="color:var(--muted)">${new Date(d.date||Date.now()).toLocaleDateString('fr-FR')}</small>
+            </div>
+            ${d.msg ? `<div class="msg">“${d.msg.replace(/\"/g,'"')}”</div>` : ''}
+          </div>
+        `;
+        list.appendChild(el);
+      });
+
+      if(donors.length === 0){
+        const empty = document.createElement('div');
+        empty.className = 'legal';
+        empty.textContent = 'Les premiers donateurs apparaîtront ici ✨';
+        list.appendChild(empty);
+      }
+    }
+
+    function openPayment(){
+      const url = DONATION_CONFIG.paymentUrl;
+      if(!url || !/^https?:\/\//.test(url)){
+        alert('Lien de paiement non configuré. Remplacez DONATION_CONFIG.paymentUrl par votre lien Stripe/HelloAsso.');
+        return;
+      }
+      window.open(url, '_blank', 'noopener');
+    }
+
+    function share(){
+      const shareData = {
+        title: 'Cagnotte EDR – ROC Giffois',
+        text: 'J’aide l’EDR du ROC Giffois à financer les bus et le voyage de fin d’année !',
+        url: window.location.href
+      };
+      if(navigator.share){
+        navigator.share(shareData).catch(()=>{});
+      } else {
+        navigator.clipboard.writeText(shareData.url).then(()=>{
+          alert('Lien copié ! Merci pour le partage 💛');
+        });
+      }
+    }
+
+    function updateQR(){
+      const url = DONATION_CONFIG.paymentUrl || window.location.href;
+      const encoded = encodeURIComponent(url);
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encoded}`;
+      document.getElementById('qrImg').src = qrUrl;
+    }
+
+    function toggleQR(ev){
+      if(ev) ev.preventDefault();
+      const box = document.getElementById('qr');
+      box.style.display = box.style.display === 'none' ? 'grid' : 'none';
+    }
+
+    document.getElementById('donateBtn').addEventListener('click', openPayment);
+    document.getElementById('shareBtn').addEventListener('click', share);
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    renderProgress();
+    renderDonors();
+    updateQR();
+  </script>
+
+  <!--
+  ============================================
+  🛠️ GUIDE RAPIDE D’INTÉGRATION (FR)
+  ============================================
+  1) Créez un compte Stripe (ou connectez votre compte existant).
+  2) Créez un Payment Link (Montant libre recommandé):
+     Stripe Dashboard > Payments > Payment Links > New > Product "Don EDR" > activez montant libre.
+  3) Copiez l’URL (ex: https://buy.stripe.com/...) et remplacez DONATION_CONFIG.paymentUrl.
+  4) Ajustez l’objectif (goal) et le montant initial (initialRaised) si nécessaire.
+  5) Hébergez la page (Netlify, Vercel, Firebase Hosting, OVH…). C’est un fichier HTML unique.
+
+  ✅ Option HelloAsso sans frais : créez une collecte, récupérez l’URL publique ou le code d’embed, et remplacez paymentUrl.
+
+  💡 Suivi automatique du total (optionnel, nécessite un backend):
+     - Créez un webhook Stripe (event: checkout.session.completed / payment_intent.succeeded)
+     - Incrémentez un total (Firestore / Supabase / JSON hébergé) et remplacez initialRaised par une requête fetch sur ce total au chargement.
+  -->
+</body>
+</html>
