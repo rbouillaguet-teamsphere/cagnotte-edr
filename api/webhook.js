@@ -4,24 +4,40 @@ import { buffer } from 'micro';
 
 // --- Initialisation Firebase ---
 if (!admin.apps.length) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+  try {
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    
+    // Debug: Check the private key format
+    console.log("Private key first 50 chars:", serviceAccount.private_key.substring(0, 50));
+    console.log("Contains \\n:", serviceAccount.private_key.includes('\\n'));
+    console.log("Contains actual newline:", serviceAccount.private_key.includes('\n'));
+    
+    // Fix the private key if needed
+    if (serviceAccount.private_key.includes('\\n')) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+      console.log("Fixed private key newlines");
+    }
+    
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+    
+    console.log("✅ Firebase initialized successfully");
+  } catch (error) {
+    console.error("❌ Firebase initialization error:", error);
+    throw error;
+  }
 }
-const db = admin.firestore();
 
-// --- Initialisation Stripe ---
+const db = admin.firestore();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// --- Disable body parsing, need raw body for signature verification ---
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-// --- Webhook principal ---
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).send("Méthode non autorisée");
@@ -31,10 +47,7 @@ export default async function handler(req, res) {
   let event;
 
   try {
-    // Read the raw body as a buffer
     const buf = await buffer(req);
-    
-    // Verify the webhook signature
     event = stripe.webhooks.constructEvent(
       buf,
       sig,
@@ -45,7 +58,6 @@ export default async function handler(req, res) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // --- Traitement des événements Stripe ---
   if (event.type === "payment_intent.succeeded") {
     const amount = event.data.object.amount_received / 100;
     console.log(`✅ Paiement reçu : ${amount} €`);
