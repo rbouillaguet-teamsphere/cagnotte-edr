@@ -1,19 +1,25 @@
 import Stripe from "stripe";
 import admin from "firebase-admin";
+import { buffer } from 'micro';
 
 // --- Initialisation Firebase ---
 if (!admin.apps.length) {
   const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
 }
-
 const db = admin.firestore();
 
 // --- Initialisation Stripe ---
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// --- Disable body parsing, need raw body for signature verification ---
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 // --- Webhook principal ---
 export default async function handler(req, res) {
@@ -25,8 +31,12 @@ export default async function handler(req, res) {
   let event;
 
   try {
+    // Read the raw body as a buffer
+    const buf = await buffer(req);
+    
+    // Verify the webhook signature
     event = stripe.webhooks.constructEvent(
-      req.body,
+      buf,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
@@ -41,25 +51,19 @@ export default async function handler(req, res) {
     console.log(`✅ Paiement reçu : ${amount} €`);
 
     const ref = db.collection("donations").doc("total");
-
+    
     try {
       await db.runTransaction(async (t) => {
         const doc = await t.get(ref);
         const current = doc.exists ? doc.data().total || 0 : 0;
-        t.set(ref, { total: current + amount }, { merge: true }); // ✅ crée le doc s'il n'existe pas
+        t.set(ref, { total: current + amount }, { merge: true });
       });
       console.log("🔥 Total mis à jour avec succès !");
     } catch (err) {
       console.error("❌ Erreur Firestore:", err);
+      return res.status(500).send("Erreur serveur");
     }
   }
 
-  res.status(200).send("ok");
+  res.status(200).json({ received: true });
 }
-
-// --- Nécessaire pour Stripe ---
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
