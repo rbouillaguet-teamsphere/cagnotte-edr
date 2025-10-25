@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cagnotte – École de Rugby ROC Giffois</title>
-  <meta name="description" content="Soutenez l’EDR du ROC Giffois : aidez-nous à financer les déplacements en bus et le voyage de fin d’année." />
+  <meta name="description" content="Soutenez l'EDR du ROC Giffois : aidez-nous à financer les déplacements en bus et le voyage de fin d'année." />
   <meta property="og:title" content="Cagnotte – École de Rugby ROC Giffois" />
-  <meta property="og:description" content="Soutenez l’EDR du ROC Giffois : aidez-nous à financer les déplacements en bus et le voyage de fin d’année." />
+  <meta property="og:description" content="Soutenez l'EDR du ROC Giffois : aidez-nous à financer les déplacements en bus et le voyage de fin d'année." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/3/3a/Rugby_union_pictogram.svg" />
   <meta name="theme-color" content="#FFCC00" />
@@ -50,6 +50,7 @@
     .btn{appearance:none;cursor:pointer;border:none;border-radius:12px;padding:12px 16px;font-weight:700}
     .btn-primary{background:var(--roc-yellow);color:#111}
     .btn-primary:hover{filter:brightness(1.05)}
+    .btn-primary:disabled{opacity:0.6;cursor:not-allowed}
     .btn-outline{background:transparent;color:#fff;border:1px solid #3a3a3a}
     .btn-outline:hover{border-color:#595959}
 
@@ -91,7 +92,7 @@
       <img class="logo" src="/public/images/LogoEDR.png" alt="Logo ROC Giffois"/>
       <div class="club">
         <h1>🖤💛 Cagnotte – École de Rugby Giffoise</h1>
-        <span>Objectif : financer <strong>les déplacements en bus</strong> et le <strong>voyage de fin d’année</strong>.</span>
+        <span>Objectif : financer <strong>les déplacements en bus</strong> et le <strong>voyage de fin d'année</strong>.</span>
       </div>
     </header>
 
@@ -99,7 +100,7 @@
       <article class="card">
         <h2>Votre soutien fait rouler nos joueurs 🐝</h2>
         <p style="color:#eaeaea;line-height:1.6">
-          Chaque week-end, nos jeunes jouent partout en Essonne (et au‑delà !). Vos dons financent directement les <strong>bus pour les plateaux</strong> et le <strong>voyage de fin d’année</strong> qui récompense leur engagement toute la saison. Merci pour votre aide 🙏
+          Chaque week-end, nos jeunes jouent partout en Essonne (et au‑delà !). Vos dons financent directement les <strong>bus pour les plateaux</strong> et le <strong>voyage de fin d'année</strong> qui récompense leur engagement toute la saison. Merci pour votre aide 🙏
         </p>
 
         <div class="progress" aria-label="Progression de la cagnotte">
@@ -115,14 +116,13 @@
         </div>
         
         <div id="donationForm" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
-        <input id="donorName" type="text" placeholder="Votre prénom (facultatif)" 
-         style="padding:10px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee;">
-        <input id="donorMsg" type="text" placeholder="Un mot d'encouragement 💛 (facultatif)" 
-         style="padding:10px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee;">
+          <input id="donorName" type="text" placeholder="Votre prénom (facultatif)" 
+           style="padding:10px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee;">
+          <input id="donorMsg" type="text" placeholder="Un mot d'encouragement 💛 (facultatif)" 
+           style="padding:10px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee;">
         </div>
 
         <div class="cta">
-          <!-- ⚠️ Remplacer data-url par votre lien Stripe Payment Link (ou HelloAsso) -->
           <button id="donateBtn" class="btn btn-primary">🎁 Je participe</button>
           <button id="shareBtn" class="btn btn-outline">🔗 Partager</button>
           <a id="qrToggle" class="btn btn-outline" href="#qr" onclick="toggleQR(event)">📱 Afficher le QR Code</a>
@@ -137,7 +137,7 @@
       <aside class="card">
         <h2>Derniers donateurs 💛</h2>
         <div id="donorsList" class="donors" aria-live="polite"></div>
-        <div class="legal">Envie d’apparaître ici ? Laissez votre prénom lors du paiement.</div>
+        <div class="legal">Envie d'apparaître ici ? Laissez votre prénom lors du paiement.</div>
       </aside>
     </section>
 
@@ -146,11 +146,11 @@
         <h2>À quoi servira votre don ?</h2>
         <ul style="line-height:1.8;color:#eaeaea">
           <li>🚌 <strong>Déplacements en bus</strong> pour les plateaux et tournois</li>
-          <li>🏕️ <strong>Voyage de fin d’année</strong> (hébergement, repas, activités)</li>
+          <li>🏕️ <strong>Voyage de fin d'année</strong> (hébergement, repas, activités)</li>
           <li>🛡️ <strong>Sécurité & confort</strong> (eau, collations, petits matériels)</li>
         </ul>
         <div class="notice" style="margin-top:10px">
-          <strong>Transparence :</strong> le total et l’usage des fonds seront présentés au comité directeur et partagés aux parents en fin de saison.
+          <strong>Transparence :</strong> le total et l'usage des fonds seront présentés au comité directeur et partagés aux parents en fin de saison.
         </div>  
       </article>
 
@@ -171,149 +171,106 @@
       <div class="faq">
         <details>
           <summary>Comment payer en ligne ?</summary>
-          <p>Cliquer sur <strong>“Je participe”</strong> ouvre une page de paiement sécurisée. Carte bancaire, PayPal acceptés. Aucun compte nécessaire.</p>
+          <p>Cliquer sur <strong>"Je participe"</strong> ouvre une page de paiement sécurisée. Carte bancaire, PayPal acceptés. Aucun compte nécessaire.</p>
         </details>
         <details>
-          <summary>Puis-je faire un virement / chèque / don en espèce ?</summary>
-          <p>Oui. Contactez le <em>Trésorier ROC Giffois</em> pour le RIB et la référence à indiquer. Votre don sera ajouté à la cagnotte.</p>
+          <summary>C'est sécurisé ?</summary>
+          <p>Oui ! Le paiement est géré par <strong>Stripe</strong> (ou HelloAsso), une solution de paiement certifiée et utilisée par des millions d'associations.</p>
         </details>
         <details>
-          <summary>Le don est-il déductible des impôts ?</summary>
-          <p>Oui, les dons à l’EDR du ROC Giffois donnent lieu à une réduction d'impot de 66%.</p>
+          <summary>Est-ce déductible fiscalement ?</summary>
+          <p>Si votre club est reconnu d'intérêt général, oui. Renseignez‑vous auprès du trésorier pour obtenir un reçu fiscal.</p>
         </details>
         <details>
-          <summary>Comment déclarer vos dons à des associations ?</summary>
-          <p>Chaque année, au moment de votre déclaration annuelle de revenus, vous devez indiquer dans la <a href="https://www.impots.gouv.fr/formulaire/2042/declaration-des-revenus" target="_blank">déclaration n°2042 RICI</a> le montant des versements effectués.</p>
+          <summary>Je ne peux pas donner en ligne. Comment faire ?</summary>
+          <p>Pas de souci ! Contactez le trésorier via <a href="mailto:tresorier@rocgiffois.fr">tresorier@rocgiffois.fr</a> pour organiser un don en espèces ou par chèque.</p>
         </details>
       </div>
     </section>
 
     <footer>
-      <div>© <span id="year"></span> ROC Giffois – École de Rugby. Tous droits réservés.</div>
-      <div class="legal">Responsable : Équipe EDR ROC Giffois • Contact trésorerie : <a href="mailto:besselionel@sfr.fr">Trésorier ROC Giffois</a></div>
+      <strong>ROC Giffois – École de Rugby</strong><br>
+      Stade de Moulon, Gif‑sur‑Yvette
+      <div class="legal">
+        Contact : <a href="mailto:contact@rocgiffois.fr">contact@rocgiffois.fr</a> | © <span id="year">2025</span> ROC Giffois
+      </div>
+      <div class="stripe-logos">
+        <span class="chip">Paiements sécurisés par Stripe</span>
+        <span class="chip">Visa, Mastercard, PayPal</span>
+      </div>
     </footer>
   </div>
 
+  <!-- ==============================
+       Configuration dynamique
+       ============================== -->
   <script>
-    // ==============================
-    //  CONFIG – Personalisez ici
-    // ==============================
     const DONATION_CONFIG = {
-      goal: 8000,                             // 🎯 Objectif en €
-      initialRaised: 0,                     // Montant déjà collecté (mettre 0 si vous commencez)
-      currency: 'EUR',
-      paymentUrl: 'https://buy.stripe.com/test_28E28s1xp5Ty47OcSz2wU00', // ⚠️ Remplacer par votre Stripe Payment Link (format https://buy.stripe.com/...) ou HelloAsso
-      donors: [                                // Derniers dons (facultatif)
-        { name: 'Camille', amount: 50, msg: 'Allez les jeunes !', date: '2025-10-10' },
-        { name: 'Nicolas', amount: 100, msg: 'Pour le bus 👍', date: '2025-10-12' },
-        { name: 'Anonyme', amount: 20, msg: '', date: '2025-10-13' },
-        { name: 'Sophie', amount: 75, msg: 'Merci les coachs', date: '2025-10-14' }
-      ]
+      goal: 8000,
+      initialRaised: 0,
+      donationsCount: 0,
+      paymentUrl: window.location.origin  // Pour le QR code
     };
 
-    // ==============================
-    //  UI Logic – pas besoin de toucher
-    // ==============================
-    const fmt = new Intl.NumberFormat('fr-FR', { style:'currency', currency: DONATION_CONFIG.currency });
+    const fmt = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
 
-    function renderProgress(){
-      const raised = DONATION_CONFIG.initialRaised;
-      const goal = DONATION_CONFIG.goal;
-      const pct = Math.max(0, Math.min(100, (raised/goal)*100));
-
+    function renderProgress() {
+      const pct = Math.min(100, (DONATION_CONFIG.initialRaised / DONATION_CONFIG.goal) * 100);
       document.getElementById('progressBar').style.width = pct + '%';
-      document.getElementById('raisedLabel').textContent = fmt.format(raised);
-      document.getElementById('goalLabel').textContent = fmt.format(goal);
-
-      // Count donors (from array)
-      const count = DONATION_CONFIG.donors?.length || 0;
-      document.getElementById('donationsCount').textContent = count;
+      document.getElementById('raisedLabel').textContent = fmt.format(DONATION_CONFIG.initialRaised);
+      document.getElementById('goalLabel').textContent = fmt.format(DONATION_CONFIG.goal);
+      document.getElementById('donationsCount').textContent = DONATION_CONFIG.donationsCount;
     }
 
-    function initials(name){
-      return (name||'A').trim().split(/\s+/).slice(0,2).map(n=>n[0]).join('').toUpperCase();
+    async function openPayment() {
+      const name = document.getElementById('donorName').value.trim();
+      const msg = document.getElementById('donorMsg').value.trim();
+      const amount = prompt("Montant du don (€)", "20");
+
+      if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert("Veuillez entrer un montant valide");
+        return;
+      }
+
+      // Désactiver le bouton pendant le traitement
+      const btn = document.getElementById('donateBtn');
+      btn.disabled = true;
+      btn.textContent = "⏳ Chargement...";
+
+      try {
+        const res = await fetch("/api/createCheckoutSession", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            name: name || "Anonyme", 
+            msg: msg || "", 
+            amount: parseFloat(amount) 
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Erreur HTTP: ${res.status}`);
+        }
+
+        const data = await res.json();
+        
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          throw new Error("URL de paiement non reçue");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la création de la session:", error);
+        alert("Une erreur est survenue. Veuillez réessayer.");
+        btn.disabled = false;
+        btn.textContent = "🎁 Je participe";
+      }
     }
-
-    // ==============================
-//  Liste des donateurs Firestore
-// ==============================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-// ⚠️ À personnaliser avec ta config publique Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBQimcuRGYNeZhAqKb-pH8pkU5CDEx7UDw",
-  authDomain: "cagnotte-edr.firebaseapp.com",
-  projectId: "cagnotte-edr",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-async function renderDonors() {
-  const list = document.getElementById("donorsList");
-  list.innerHTML = "";
-
-  try {
-    const q = query(collection(db, "donations"), orderBy("date", "desc"), limit(20));
-    const snapshot = await getDocs(q);
-    const donors = snapshot.docs.map((doc) => doc.data());
-
-    donors.forEach((d) => {
-      const el = document.createElement("div");
-      el.className = "donor";
-      el.innerHTML = `
-        <div class="avatar" aria-hidden="true">${initials(d.name)}</div>
-        <div class="meta">
-          <div class="top">
-            <span class="name">${d.name || "Anonyme"}</span>
-            <span class="amount">${fmt.format(d.amount || 0)}</span>
-            <small style="color:var(--muted)">${new Date(d.date).toLocaleDateString("fr-FR")}</small>
-          </div>
-          ${d.msg ? `<div class="msg">“${d.msg}”</div>` : ""}
-        </div>
-      `;
-      list.appendChild(el);
-    });
-
-    if (donors.length === 0) {
-      const empty = document.createElement("div");
-      empty.className = "legal";
-      empty.textContent = "Les premiers donateurs apparaîtront ici ✨";
-      list.appendChild(empty);
-    }
-  } catch (err) {
-    console.error("Erreur Firestore:", err);
-    const errMsg = document.createElement("div");
-    errMsg.className = "legal";
-    errMsg.textContent = "Impossible de charger les donateurs.";
-    list.appendChild(errMsg);
-  }
-}
-  
-  async function openPayment() {
-  const name = document.getElementById('donorName').value;
-  const msg = document.getElementById('donorMsg').value;
-  const amount = prompt("Montant du don (€)", "20");
-
-  if (!amount || isNaN(amount)) return;
-
-  const res = await fetch("/api/createCheckoutSession", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, msg, amount: parseFloat(amount) }),
-  });
-
-  const data = await res.json();
-  if (data.url) window.location.href = data.url;
-}
-
-
 
     function share(){
       const shareData = {
         title: 'Cagnotte EDR – ROC Giffois',
-        text: 'J’aide l’EDR du ROC Giffois à financer les bus et le voyage de fin d’année !',
+        text: 'J'aide l'EDR du ROC Giffois à financer les bus et le voyage de fin d'année !',
         url: window.location.href
       };
       if(navigator.share){
@@ -342,7 +299,7 @@ async function renderDonors() {
     document.getElementById('shareBtn').addEventListener('click', share);
     document.getElementById('year').textContent = new Date().getFullYear();
 
-        renderProgress();
+    renderProgress();
     updateQR();
 
     // ==============================
@@ -351,10 +308,13 @@ async function renderDonors() {
     async function updateTotalFromServer() {
       try {
         const res = await fetch('/api/getTotal');
+        if (!res.ok) throw new Error('Erreur réseau');
+        
         const data = await res.json();
 
         if (data.total !== undefined) {
           DONATION_CONFIG.initialRaised = data.total;
+          DONATION_CONFIG.donationsCount = data.count || 0;
           renderProgress();
         }
       } catch (err) {
@@ -408,7 +368,7 @@ async function renderDonors() {
                 <span class="amount">${fmt.format(d.amount || 0)}</span>
                 <small style="color:var(--muted)">${new Date(d.date).toLocaleDateString("fr-FR")}</small>
               </div>
-              ${d.msg ? `<div class="msg">“${d.msg}”</div>` : ""}
+              ${d.msg ? `<div class="msg">"${d.msg}"</div>` : ""}
             </div>
           `;
           list.appendChild(el);
@@ -434,4 +394,3 @@ async function renderDonors() {
   </script>
 </body>
 </html>
-
