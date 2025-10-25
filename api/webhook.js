@@ -4,32 +4,18 @@ import { buffer } from "micro";
 
 // --- Initialisation Firebase ---
 if (!admin.apps.length) {
-  try {
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-
-    // Debug (facultatif)
-    console.log("Private key length:", serviceAccount.private_key.length);
-    console.log("Has BEGIN:", serviceAccount.private_key.includes("BEGIN"));
-    console.log("Has END:", serviceAccount.private_key.includes("END"));
-
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
-
-    console.log("✅ Firebase initialized successfully");
-  } catch (error) {
-    console.error("❌ Firebase initialization error:", error);
-    throw error;
-  }
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+  console.log("✅ Firebase initialized successfully");
 }
 
 const db = admin.firestore();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  api: { bodyParser: false },
 };
 
 export default async function handler(req, res) {
@@ -42,27 +28,18 @@ export default async function handler(req, res) {
 
   try {
     const buf = await buffer(req);
-    event = stripe.webhooks.constructEvent(
-      buf,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
+    event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error("⚠️ Signature invalide:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   try {
+    // --- Paiement réussi ---
     if (event.type === "payment_intent.succeeded") {
       const intent = event.data.object;
       const amount = intent.amount_received / 100;
-      const name = intent.metadata?.name || "Anonyme";
-      const msg = intent.metadata?.msg || "";
-      const date = new Date().toISOString();
 
-      console.log(`✅ Paiement reçu : ${amount} € par ${name}`);
-
-      // 🔥 Transaction pour total
       const ref = db.collection("donations").doc("total");
       await db.runTransaction(async (t) => {
         const doc = await t.get(ref);
@@ -70,7 +47,17 @@ export default async function handler(req, res) {
         t.set(ref, { total: current + amount }, { merge: true });
       });
 
-      // 🔥 Nouveau don individuel
+      console.log(`✅ Total mis à jour : +${amount} €`);
+    }
+
+    // --- Session Checkout complétée ---
+    else if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      const amount = session.amount_total / 100;
+      const name = session.metadata?.name || "Anonyme";
+      const msg = session.metadata?.msg || "";
+      const date = new Date().toISOString();
+
       await db.collection("donations").add({
         name,
         msg,
@@ -78,14 +65,16 @@ export default async function handler(req, res) {
         date,
       });
 
-      console.log("🔥 Total mis à jour avec succès !");
-    } else {
-      console.log(`Unhandled event type: ${event.type}`);
+      console.log(`💛 Nouveau don enregistré : ${name} (${amount} €)`);
+    }
+
+    else {
+      console.log(`ℹ️ Événement ignoré : ${event.type}`);
     }
 
     res.status(200).send("ok");
   } catch (err) {
     console.error("❌ Erreur Firestore:", err);
-    return res.status(500).send("Erreur serveur");
+    res.status(500).send("Erreur serveur");
   }
 }
