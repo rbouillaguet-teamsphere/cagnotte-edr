@@ -342,33 +342,96 @@ async function renderDonors() {
     document.getElementById('shareBtn').addEventListener('click', share);
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    renderProgress();
-    renderDonors();
+        renderProgress();
     updateQR();
 
     // ==============================
-//  Chargement du total dynamique
-// ==============================
-async function updateTotalFromServer() {
-  try {
-    const res = await fetch('/api/getTotal');
-    const data = await res.json();
+    //  Chargement du total dynamique
+    // ==============================
+    async function updateTotalFromServer() {
+      try {
+        const res = await fetch('/api/getTotal');
+        const data = await res.json();
 
-    if (data.total !== undefined) {
-      DONATION_CONFIG.initialRaised = data.total;
-      renderProgress(); // met à jour la barre et le montant
+        if (data.total !== undefined) {
+          DONATION_CONFIG.initialRaised = data.total;
+          renderProgress();
+        }
+      } catch (err) {
+        console.error('Erreur lors de la récupération du total:', err);
+      }
     }
-  } catch (err) {
-    console.error('Erreur lors de la récupération du total:', err);
-  }
-}
 
-// Met à jour au chargement
-updateTotalFromServer();
+    updateTotalFromServer();
+    setInterval(updateTotalFromServer, 15000);
+  </script>
 
-// Et rafraîchit toutes les 15 secondes
-setInterval(updateTotalFromServer, 15000);
+  <!-- ==============================
+       Module séparé : lecture Firestore
+       ============================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQimcuRGYNeZhAqKb-pH8pkU5CDEx7UDw",
+      authDomain: "cagnotte-edr.firebaseapp.com",
+      projectId: "cagnotte-edr",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const fmt = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+
+    function initials(name) {
+      return (name || 'A').trim().split(/\s+/).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+    }
+
+    async function renderDonors() {
+      const list = document.getElementById("donorsList");
+      list.innerHTML = "";
+
+      try {
+        const q = query(collection(db, "donations"), orderBy("date", "desc"), limit(20));
+        const snapshot = await getDocs(q);
+        const donors = snapshot.docs.map((doc) => doc.data());
+
+        donors.forEach((d) => {
+          const el = document.createElement("div");
+          el.className = "donor";
+          el.innerHTML = `
+            <div class="avatar" aria-hidden="true">${initials(d.name)}</div>
+            <div class="meta">
+              <div class="top">
+                <span class="name">${d.name || "Anonyme"}</span>
+                <span class="amount">${fmt.format(d.amount || 0)}</span>
+                <small style="color:var(--muted)">${new Date(d.date).toLocaleDateString("fr-FR")}</small>
+              </div>
+              ${d.msg ? `<div class="msg">“${d.msg}”</div>` : ""}
+            </div>
+          `;
+          list.appendChild(el);
+        });
+
+        if (donors.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "legal";
+          empty.textContent = "Les premiers donateurs apparaîtront ici ✨";
+          list.appendChild(empty);
+        }
+      } catch (err) {
+        console.error("Erreur Firestore:", err);
+        const errMsg = document.createElement("div");
+        errMsg.className = "legal";
+        errMsg.textContent = "Impossible de charger les donateurs.";
+        list.appendChild(errMsg);
+      }
+    }
+
+    renderDonors();
+    setInterval(renderDonors, 30000);
   </script>
 </body>
 </html>
+
