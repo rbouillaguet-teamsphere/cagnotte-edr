@@ -264,21 +264,23 @@
       }
     }
 
-    function openPayment() {
-  const base = DONATION_CONFIG.paymentUrl;
-  if (!base || !/^https?:\/\//.test(base)) {
-    alert('Lien de paiement non configuré. Remplacez DONATION_CONFIG.paymentUrl par votre lien Stripe/HelloAsso.');
-    return;
-  }
+    async function openPayment() {
+  const name = document.getElementById('donorName').value;
+  const msg = document.getElementById('donorMsg').value;
+  const amount = prompt("Montant du don (€)", "20");
 
-  const name = encodeURIComponent(document.getElementById('donorName').value || '');
-  const msg = encodeURIComponent(document.getElementById('donorMsg').value || '');
+  if (!amount || isNaN(amount)) return;
 
-  // Ajout des métadonnées Stripe
-  const url = `${base}?metadata[name]=${name}&metadata[msg]=${msg}`;
+  const res = await fetch("/api/createCheckoutSession", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, msg, amount: parseFloat(amount) }),
+  });
 
-  window.open(url, '_blank', 'noopener');
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
 }
+
 
 
     function share(){
