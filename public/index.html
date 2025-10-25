@@ -113,6 +113,13 @@
             Objectif : <strong id="goalLabel">—</strong>
           </div>
         </div>
+        
+        <div id="donationForm" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+        <input id="donorName" type="text" placeholder="Votre prénom (facultatif)" 
+         style="padding:10px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee;">
+        <input id="donorMsg" type="text" placeholder="Un mot d'encouragement 💛 (facultatif)" 
+         style="padding:10px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee;">
+        </div>
 
         <div class="cta">
           <!-- ⚠️ Remplacer data-url par votre lien Stripe Payment Link (ou HelloAsso) -->
@@ -257,14 +264,22 @@
       }
     }
 
-    function openPayment(){
-      const url = DONATION_CONFIG.paymentUrl;
-      if(!url || !/^https?:\/\//.test(url)){
-        alert('Lien de paiement non configuré. Remplacez DONATION_CONFIG.paymentUrl par votre lien Stripe/HelloAsso.');
-        return;
-      }
-      window.open(url, '_blank', 'noopener');
-    }
+    function openPayment() {
+  const base = DONATION_CONFIG.paymentUrl;
+  if (!base || !/^https?:\/\//.test(base)) {
+    alert('Lien de paiement non configuré. Remplacez DONATION_CONFIG.paymentUrl par votre lien Stripe/HelloAsso.');
+    return;
+  }
+
+  const name = encodeURIComponent(document.getElementById('donorName').value || '');
+  const msg = encodeURIComponent(document.getElementById('donorMsg').value || '');
+
+  // Ajout des métadonnées Stripe
+  const url = `${base}?metadata[name]=${name}&metadata[msg]=${msg}`;
+
+  window.open(url, '_blank', 'noopener');
+}
+
 
     function share(){
       const shareData = {

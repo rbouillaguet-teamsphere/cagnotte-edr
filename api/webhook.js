@@ -55,23 +55,38 @@ export default async function handler(req, res) {
   }
 
   if (event.type === "payment_intent.succeeded") {
-    const amount = event.data.object.amount_received / 100;
-    console.log(`✅ Paiement reçu : ${amount} €`);
+  const intent = event.data.object;
+  const amount = intent.amount_received / 100;
+  const name = intent.metadata?.name || "Anonyme";
+  const msg = intent.metadata?.msg || "";
+  const date = new Date().toISOString();
 
-    const ref = db.collection("donations").doc("total");
-    
-    try {
-      await db.runTransaction(async (t) => {
-        const doc = await t.get(ref);
-        const current = doc.exists ? doc.data().total || 0 : 0;
-        t.set(ref, { total: current + amount }, { merge: true });
-      });
+  console.log(`✅ Paiement reçu : ${amount} € par ${name}`);
+
+  const ref = db.collection("donations").doc("total");
+  await db.runTransaction(async (t) => {
+    const doc = await t.get(ref);
+    const current = doc.exists ? doc.data().total || 0 : 0;
+    t.set(ref, { total: current + amount }, { merge: true });
+  });
+
+  // 🔥 Nouveau : enregistrement du don individuel
+  await db.collection("donations").add({
+    name,
+    msg,
+    amount,
+    date,
+  });
+
+  res.status(200).send("ok");
+}
+
       console.log("🔥 Total mis à jour avec succès !");
-    } catch (err) {
+     catch (err) {
       console.error("❌ Erreur Firestore:", err);
       return res.status(500).send("Erreur serveur");
     }
-  }
+  
 
   res.status(200).json({ received: true });
 }
