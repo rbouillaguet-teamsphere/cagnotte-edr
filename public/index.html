@@ -185,6 +185,71 @@
       <div class="legal">Responsable : Équipe EDR ROC Giffois • Contact trésorerie : <a href="mailto:besselionel@sfr.fr">Trésorier ROC Giffois</a></div>
     </footer>
   </div>
+<!-- ==============================
+     Lightbox pour la galerie
+     ============================== -->
+<div id="lightbox" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+">
+  <img id="lightboxImg" src="" alt="Agrandissement" style="
+    max-width:90%;
+    max-height:90%;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+  ">
+  <button id="lightboxClose" aria-label="Fermer" style="
+    position:absolute;
+    top:30px;
+    right:30px;
+    background:rgba(255,255,255,0.2);
+    border:none;
+    color:#fff;
+    font-size:1.8rem;
+    cursor:pointer;
+    border-radius:50%;
+    width:42px;
+    height:42px;
+  ">✕</button>
+</div>
+
+<script>
+  // Lightbox simple pour la galerie
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const lightboxClose = document.getElementById("lightboxClose");
+
+  document.querySelectorAll(".gallery img").forEach(img => {
+    img.style.cursor = "zoom-in";
+    img.addEventListener("click", () => {
+      lightboxImg.src = img.src;
+      lightbox.style.display = "flex";
+    });
+  });
+
+  lightboxClose.addEventListener("click", () => {
+    lightbox.style.display = "none";
+  });
+
+  // Fermer en cliquant sur le fond
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+      lightbox.style.display = "none";
+    }
+  });
+
+  // Fermer avec la touche Échap
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      lightbox.style.display = "none";
+    }
+  });
+</script>
 
   <!-- Script principal (sans imports) -->
   <script>
@@ -368,5 +433,7 @@
     renderDonors();
     setInterval(renderDonors, 30000);
   </script>
+
+  
 </body>
 </html>
