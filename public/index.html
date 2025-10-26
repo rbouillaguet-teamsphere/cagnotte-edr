@@ -208,7 +208,7 @@
     async function openPayment() {
       const name = document.getElementById('donorName').value.trim();
       const msg = document.getElementById('donorMsg').value.trim();
-      const amount = prompt("Montant du don (€)", "20");
+      const amount = prompt("Montant du don (€)", "50");
 
       if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
         alert("Veuillez entrer un montant valide");
