@@ -186,13 +186,13 @@
     </footer>
   </div>
 <!-- ==============================
-     Lightbox pour la galerie
+     Lightbox galerie avec navigation
      ============================== -->
 <div id="lightbox" style="
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.85);
+  background:rgba(0,0,0,0.88);
   justify-content:center;
   align-items:center;
   z-index:1000;
@@ -201,13 +201,13 @@
     max-width:90%;
     max-height:90%;
     border-radius:12px;
-    box-shadow:0 0 20px rgba(0,0,0,0.5);
+    box-shadow:0 0 20px rgba(0,0,0,0.6);
   ">
   <button id="lightboxClose" aria-label="Fermer" style="
     position:absolute;
     top:30px;
     right:30px;
-    background:rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.15);
     border:none;
     color:#fff;
     font-size:1.8rem;
@@ -216,37 +216,89 @@
     width:42px;
     height:42px;
   ">✕</button>
+
+  <!-- Flèches navigation -->
+  <button id="lightboxPrev" aria-label="Précédent" style="
+    position:absolute;
+    left:40px;
+    background:rgba(255,255,255,0.15);
+    border:none;
+    color:#fff;
+    font-size:2rem;
+    cursor:pointer;
+    border-radius:50%;
+    width:50px;
+    height:50px;
+  ">‹</button>
+
+  <button id="lightboxNext" aria-label="Suivant" style="
+    position:absolute;
+    right:40px;
+    background:rgba(255,255,255,0.15);
+    border:none;
+    color:#fff;
+    font-size:2rem;
+    cursor:pointer;
+    border-radius:50%;
+    width:50px;
+    height:50px;
+  ">›</button>
 </div>
 
 <script>
-  // Lightbox simple pour la galerie
+  // ==============================
+  // Lightbox avec navigation
+  // ==============================
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
   const lightboxClose = document.getElementById("lightboxClose");
+  const prevBtn = document.getElementById("lightboxPrev");
+  const nextBtn = document.getElementById("lightboxNext");
 
-  document.querySelectorAll(".gallery img").forEach(img => {
-    img.style.cursor = "zoom-in";
-    img.addEventListener("click", () => {
-      lightboxImg.src = img.src;
-      lightbox.style.display = "flex";
-    });
-  });
+  const images = Array.from(document.querySelectorAll(".gallery img"));
+  let currentIndex = 0;
 
-  lightboxClose.addEventListener("click", () => {
+  function openLightbox(index) {
+    currentIndex = index;
+    lightboxImg.src = images[index].src;
+    lightbox.style.display = "flex";
+  }
+
+  function closeLightbox() {
     lightbox.style.display = "none";
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % images.length;
+    lightboxImg.src = images[currentIndex].src;
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    lightboxImg.src = images[currentIndex].src;
+  }
+
+  // Événements
+  images.forEach((img, index) => {
+    img.style.cursor = "zoom-in";
+    img.addEventListener("click", () => openLightbox(index));
   });
+
+  lightboxClose.addEventListener("click", closeLightbox);
+  prevBtn.addEventListener("click", showPrev);
+  nextBtn.addEventListener("click", showNext);
 
   // Fermer en cliquant sur le fond
   lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) {
-      lightbox.style.display = "none";
-    }
+    if (e.target === lightbox) closeLightbox();
   });
 
-  // Fermer avec la touche Échap
+  // Clavier
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      lightbox.style.display = "none";
+    if (lightbox.style.display === "flex") {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") showPrev();
+      if (e.key === "ArrowRight") showNext();
     }
   });
 </script>
